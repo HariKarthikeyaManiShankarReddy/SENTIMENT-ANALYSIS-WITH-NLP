@@ -1,18 +1,6 @@
-# SENTIMENT-ANALYSIS-WITH-NLP
+# SENTIMENT ANALYSIS WITH NLP
 
-*COMPANY*: CODTECH IT SOLUTIONS
-
-*NAME*: CHENNAREDDY HARI KARTHIKEYA
-
-*INTERN ID*: CT06DL832
-
-*DOMAIN*: MACHINE LEARNING
-
-*DURATION*: 6 WEEKS
-
-*MENTOR*: NEELA SANTHOSH KUMAR
-
-DESCRIPTION: 
+*DESCRIPTION OF THE PROJECT*: 
 
 Sentiment Analysis is one of the most important and commonly used applications in Natural Language Processing (NLP). It is the process of identifying and categorizing opinions expressed in a piece of text,
 
