@@ -1,62 +1,49 @@
-#importing required libraries for the program 
+# importing required libraries for the project
 import pandas as pd
-import re
 import string
+import re
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction import text
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score,classification_report,confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# reading required dataset
-df=pd.read_csv('Dataset.csv')
+#loading dataset 
+df=pd.read_csv('movie_reviews_dataset.csv')
+print("Columns: ",df.columns.tolist())
 
-# removing rows with missing reviews and keeping only the values with sentiment
-df=df[['Review','Sentiment']].dropna()
-df=df[df['Sentiment'].isin(['positive','negative'])]
+df = df[['review', 'sentiment']].dropna()
+df = df[df['sentiment'].isin(['positive', 'negative'])]
 
-# function to clean the data
+# cleaning data
 def clean_data(review):
-  review=review.lower()
-  review=review.translate(str.maketrans('','',string.punctuation)) #to remove punctuation
-  review=re.sub(r'\d+','',review)
-  words=review.split()
-  stop_words=text.ENGLISH_STOP_WORDS
-  words=[word for word in words if word not in stop_words]
-  return " ".join(words)
+    review = review.lower()
+    review = review.translate(str.maketrans('', '', string.punctuation))
+    review = re.sub(r'\d+', ' ', review)
+    return review
 
-# applying the cleaning function to the data in the dataset
-df['cleaned_data']=df['Review'].apply(clean_data)
+df['cleaned_data'] = df['review'].apply(clean_data)
+x = df['cleaned_data']
+y = df['sentiment']
+# train test splitting
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42, stratify=y)
+# stratify ensures that the training and testing datasets maintain the exact same proportion of class labels as the original dataset
 
-# splitting data for input and output variables
-x=df['cleaned_data']
-y=df['Sentiment']
+vector = TfidfVectorizer(ngram_range=(1, 2), max_features=5000, stop_words='english')
+x_train_tfidf = vector.fit_transform(x_train)
+x_test_tfidf = vector.transform(x_test)
 
-# splitting model for model evaluation
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=42)
+model = LogisticRegression(max_iter=1000)
+model.fit(x_train_tfidf, y_train)
+y_pred = model.predict(x_test_tfidf)
 
-# using tfidf vectorizer converting text to numeric
-vector=TfidfVectorizer(ngram_range=(1,2),max_features=5000)
-x_train_tfidf=vector.fit_transform(x_train)
-x_test_tfidf=vector.transform(x_test)
+print("Accuracy score: ", accuracy_score(y_test, y_pred))
+print("\nClassification report of model is:\n", classification_report(y_test, y_pred))
+labels = ['negative', 'positive']
+cm = confusion_matrix(y_test, y_pred, labels=labels)
 
-# using losgistic regression model traininig the model
-model=LogisticRegression()
-model.fit(x_train_tfidf,y_train)
-
-# make predictions
-y_pred=model.predict(x_test_tfidf)
-
-# preforming accuracy_score, classification report using model metrics form sklearn
-print("Accuracy score: ",accuracy_score(y_test,y_pred))
-print("Classification report of model is: ",classification_report(y_test,y_pred))
-
-# data visualization using confusion matrix for better understanding
-cm=confusion_matrix(y_test,y_pred, labels=['positive','negative'])
-plt.figure(figsize=(10,8))
-sns.heatmap(cm,annot=True,cmap='Blues',xticklabels=['positive','negative'],yticklabels=['positive','negative'])
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=labels, yticklabels=labels)
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.title('Confusion Matrix')
