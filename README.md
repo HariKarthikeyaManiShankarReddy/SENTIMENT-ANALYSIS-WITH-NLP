@@ -1,7 +1,7 @@
 # Sentiment Analysis with NLP using Logistic Regression
 
 ## Project Description
-Sentiment Analysis is one of the most vital and commonly used applications in Natural Language Processing (NLP). It is the computational process of identifying, extracting, and categorizing opinions expressed in a piece of text—specifically to determine whether the writer’s attitude toward a particular topic, product, movie, or service is positive, negative, or neutral. 
+Sentiment Analysis is one of the most vital and commonly used applications in Natural Language Processing (NLP). It is the computational process of identifying, extracting, and categorizing opinions expressed in a piece of text specifically to determine whether the writer’s attitude toward a particular topic, product, movie, or service is positive, negative, or neutral. 
 
 This task is widely implemented in industries such as entertainment, e-commerce, marketing, customer care, and social media tracking to understand public reception at scale.
 
